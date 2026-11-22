@@ -1,0 +1,184 @@
+<title>Orca release recipes</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Fraunces:opsz,wght@9..144,600&display=swap">
+<style>
+/* Layout: one reading column, with an example "recipe" as the central object and a step flow */
+:root{
+  --bg:#f6f7f5; --surface:#ffffff; --fg:#1d2420; --muted:#5d6862; --line:#d9ded9;
+  --accent:#1f7a5c; --accent-soft:#e3f1ea; --warn:#a4561a; --code:#eef1ee;
+  --f-display:"Fraunces", Georgia, serif; --f-body:"IBM Plex Sans", system-ui, sans-serif; --f-mono:"IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#131816; --surface:#1a201d; --fg:#e4ebe6; --muted:#9aa8a0; --line:#2c3531;
+  --accent:#5cc49b; --accent-soft:#1d3329; --warn:#e3a06a; --code:#202825; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#131816; --surface:#1a201d; --fg:#e4ebe6; --muted:#9aa8a0; --line:#2c3531;
+  --accent:#5cc49b; --accent-soft:#1d3329; --warn:#e3a06a; --code:#202825; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font:16px/1.6 var(--f-body);margin:0}
+.wrap{max-width:860px;margin:0 auto;padding-block:48px 80px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:56px}
+h1,h2{font-family:var(--f-display);font-weight:600;text-wrap:balance;margin:0;letter-spacing:-.01em}
+h1{font-size:clamp(2rem,5vw,2.9rem);line-height:1.1}
+h2{font-size:1.55rem;line-height:1.2}
+h3{font-size:1rem;margin:0;font-weight:600}
+p{margin:0;max-width:65ch}
+.eyebrow{font:500 .75rem/1 var(--f-mono);text-transform:uppercase;letter-spacing:.08em;color:var(--accent)}
+.lead{font-size:1.15rem;color:var(--muted)}
+header{display:flex;flex-direction:column;gap:16px}
+section{display:flex;flex-direction:column;gap:18px}
+code,kbd{font-family:var(--f-mono);font-size:.88em;background:var(--code);padding:.1em .35em;border-radius:4px}
+.recipe{background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.recipe-head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:10px 16px;border-bottom:1px solid var(--line);font:500 .8rem var(--f-mono);color:var(--muted)}
+.recipe pre{margin:0;padding:16px;overflow-x:auto;font:.86rem/1.65 var(--f-mono)}
+.recipe .k{color:var(--accent)} .recipe .m{color:var(--muted)} .recipe .w{color:var(--warn)}
+.legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.legend div{display:flex;gap:10px;align-items:baseline}
+.tag{font:600 .72rem var(--f-mono);padding:2px 7px;border-radius:999px;white-space:nowrap;border:1px solid currentColor}
+.tag.auto{color:var(--accent)} .tag.man{color:var(--muted)} .tag.conf{color:var(--warn)}
+.flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;counter-reset:s;list-style:none;margin:0;padding:0}
+.flow li{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.flow li::before{counter-increment:s;content:counter(s);font:600 .8rem var(--f-mono);color:var(--accent)}
+.flow p{font-size:.92rem;color:var(--muted)}
+.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.93rem;min-width:560px}
+th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:500 .75rem var(--f-mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+tr:last-child td{border-bottom:0}
+td:first-child{white-space:nowrap;font-family:var(--f-mono);color:var(--accent)}
+.hint{font:.9rem/1.5 var(--f-mono);background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:6px;padding:12px 14px;overflow-x:auto}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.card p{font-size:.95rem;color:var(--muted)}
+ul.rules{margin:0;padding-left:1.1rem;display:flex;flex-direction:column;gap:6px;max-width:65ch}
+pre.mermaid{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;overflow-x:auto;margin:0}
+footer{font-size:.85rem;color:var(--muted)}
+a{color:var(--accent)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+<header>
+  <span class="eyebrow">Orca · Claude Code · Codex</span>
+  <h1>Release recipes for every project</h1>
+  <p class="lead">A short command for push, pull request, deploy and local services. The agent reads the recipe of the project you are in, shows you the checklist and asks for confirmation before anything that can't be undone. They are Orca skills: they work with Claude, Codex and the other agents Orca launches.</p>
+</header>
+
+<section>
+  <h2>The problem it solves</h2>
+  <p>With many different projects (Flutter apps, NestJS APIs with Docker, Go services, static sites, iOS apps) and several git servers, every project has its own commands and steps. It's easy to forget one, or to use another project's command. Here each project is described once, in a recipe, and the skills are the same for all of them.</p>
+</section>
+
+<section>
+  <h2>A recipe</h2>
+  <p>One Markdown file per project. At the top it says how to recognize the repo; below, the steps of each activity.</p>
+  <div class="recipe" role="figure" aria-label="Example recipe">
+    <div class="recipe-head"><span>recipes/example-api.md</span><span>host: gitea · base: main</span></div>
+<pre><span class="m">---</span>
+<span class="k">id:</span> example-api
+<span class="k">match:</span>
+  <span class="k">remotes:</span> ["git.example.org/team/example-api"]
+<span class="k">host:</span> gitea
+<span class="k">base_branch:</span> main
+<span class="m">---</span>
+<span class="k">## push</span>
+- [ ] `npm run lint`
+- [ ] `npm test`
+- [ ] if the Prisma schema changed: the migration exists
+<span class="k">## deploy</span>
+<span class="k">### dev (confirm)</span>
+- [ ] run the release.yml workflow from the Actions page
+- [ ] `npm test` <span class="w">&lt;!-- inferred: confirm --&gt;</span>
+<span class="k">## compose</span>
+- file: `docker-compose.yml`
+- project: example-api
+- services: postgres payments-mock
+- note: Postgres on 5433</pre>
+  </div>
+  <div class="legend">
+    <div><span class="tag auto">auto</span><span>One backticked command: the agent runs it, exactly as written.</span></div>
+    <div><span class="tag man">manual</span><span>Free text: you do it, the agent waits for your OK.</span></div>
+    <div><span class="tag conf">to confirm</span><span>A step guessed from the repo: flagged until you confirm it.</span></div>
+  </div>
+</section>
+
+<section>
+  <h2>What happens when you run a skill</h2>
+  <ol class="flow">
+    <li><h3>Recognizes the project</h3><p>From the git remote or the folder, even inside an Orca worktree.</p></li>
+    <li><h3>Shows the checklist</h3><p>Every step, marked auto or manual, before doing anything.</p></li>
+    <li><h3>Runs in order</h3><p>If a step fails it stops: fix it, skip it with a reason, or abort.</p></li>
+    <li><h3>Asks for confirmation</h3><p>Before push, PR, deploy or deleting data. Never automatically.</p></li>
+    <li><h3>Sums up</h3><p>What was done, what was skipped and why, links to the PR or release.</p></li>
+  </ol>
+</section>
+
+<section>
+  <h2>The commands</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Command</th><th>You can say</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td>/push</td><td>"push this branch"</td><td>Checks the branch, runs the project's checks, pushes the branch after confirmation.</td></tr>
+      <tr><td>/pr</td><td>"open a PR"</td><td>Pushes if needed, writes title and description from the commits, opens the PR on GitHub or the right page on Gitea.</td></tr>
+      <tr><td>/deploy</td><td>"deploy to staging"</td><td>Pick the environment or store; runs the steps and asks for confirmation for every step that releases.</td></tr>
+      <tr><td>/compose</td><td>"start the services"</td><td>Starts, stops, shows the status or logs of the local services (db, mocks). Reset deletes data only after a yes.</td></tr>
+      <tr><td>/dev</td><td>"start dev"</td><td>Local services first, then each dev process of the project in its own Orca terminal.</td></tr>
+      <tr><td>/status</td><td>"project status"</td><td>Every project at a glance: uncommitted work, unpushed commits, worktrees, recipes to fix, open PRs.</td></tr>
+      <tr><td>/align</td><td>"align the recipes"</td><td>Compares each recipe with its repo: broken commands, new scripts or workflows, steps to confirm. Proposes the fixes.</td></tr>
+      <tr><td>/updates</td><td>"any updates?"</td><td>Outdated dependencies per project, plus news, breaking changes and security advisories on the technologies you use or want to try. Upgrades nothing.</td></tr>
+      <tr><td>/prompt</td><td>"new task: …"</td><td>Turns a rough request into a structured prompt from the project's real context, then starts it in a new worktree.</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>Italian works too: "fai il push", "apri la PR", "allinea le ricette", "stato dei progetti"…</p>
+</section>
+
+<section>
+  <h2>Without having to remember</h2>
+  <div class="cols">
+    <div class="card"><h3>When a session starts</h3><p>One line with the project's stack and the useful skills. If the recipe no longer matches the repo, it tells you.</p></div>
+    <div class="card"><h3>Orca Quick Commands</h3><p>Buttons in the Quick Commands menu: they open the agent with the right command, or start the project's services in one click.</p></div>
+    <div class="card"><h3>Every Monday at 9</h3><p>An Orca automation prepares a report: recipes to update, security, recommended updates, news.</p></div>
+    <div class="card"><h3>Release Control</h3><p>An Orca plugin: every project as a constellation lit by its release state, with a button for each skill.</p></div>
+  </div>
+  <div class="hint">📦 example-api · node docker gh-actions · skill: /compose /push /pr /deploy · ⚠ recipe out of date: /align</div>
+</section>
+
+<section>
+  <h2>How it is built</h2>
+<pre class="mermaid">
+flowchart LR
+  S[Agent session in Orca] --> H[Session-start hint]
+  S --> K["/push /pr /deploy /compose /dev"]
+  K --> P[Common procedure]
+  P --> F[Find recipe]
+  F --> R[(recipes/project.md)]
+  P --> C{Confirm?}
+  C -->|yes| A[Run]
+  W["/align + Monday report"] --> SC[Scanner] --> R
+</pre>
+  <p>The skills are generic and contain no project commands. The scripts that recognize the repo, generate the docker commands and compare the recipes are tested automatically.</p>
+</section>
+
+<section>
+  <h2>Getting started</h2>
+  <div class="cols">
+    <div class="card"><h3>For you or a colleague</h3><p>Install in Orca the skill bundle you received as a link, then in a session write "set up the release skills": the agent interviews you about your projects and habits and prepares your recipes in a folder of yours. About 15 minutes, no push or deploy during setup.</p></div>
+    <div class="card"><h3>To rebuild everything</h3><p>Give <code>REPRODUCE.md</code> to an agent: it holds the architecture, the contracts, the build order and the pitfalls already found.</p></div>
+  </div>
+</section>
+
+<section>
+  <h2>Rules that never change</h2>
+  <ul class="rules">
+    <li>The agent only runs commands written in the recipe.</li>
+    <li>Push, PR, deploy and deleting data always need an explicit yes.</li>
+    <li>Recipes live in your own data folder, not in the project repos.</li>
+    <li>Server compose files are never used locally.</li>
+    <li>Reports and updates only read: they upgrade neither dependencies nor projects.</li>
+  </ul>
+</section>
+
+<footer>Skills repo: README, ONBOARDING.md, REPRODUCE.md</footer>
+</div>
+

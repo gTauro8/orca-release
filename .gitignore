@@ -1,0 +1,13 @@
+.claude/worktrees/
+.superpowers/
+dist/
+/dashboard/
+/prompts/
+__pycache__/
+*.pyc
+.orca/
+/.impeccable/review/
+/.impeccable/surface-round.json
+/.impeccable/live/
+/.impeccable/questions/
+.private-words

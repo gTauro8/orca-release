@@ -1,0 +1,18 @@
+# Regexes over `git ls-files`: what goes into the public orca-release repository. Everything else stays private
+# (recipes/, reports/, tech-watch.md, prompts, personal plans and notes).
+^skills/
+^plugin/release-control/
+^tests/
+^tools/
+^\.github/
+^install\.sh$
+^README\.md$
+^CHANGELOG\.md$
+^ONBOARDING\.md$
+^REPRODUCE\.md$
+^DESIGN\.md$
+^PRODUCT\.md$
+^VERSION$
+^LICENSE$
+^docs/guide\.html$
+^\.gitignore$

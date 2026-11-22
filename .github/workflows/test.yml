@@ -1,0 +1,14 @@
+name: tests
+on:
+  push:
+  pull_request:
+jobs:
+  shell:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Engine and skills tests
+        run: |
+          git config --global user.email ci@example.com
+          git config --global user.name ci
+          bash tests/run.sh

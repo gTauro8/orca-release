@@ -1,0 +1,177 @@
+{
+  "manifestVersion": 2,
+  "id": "release-control",
+  "name": "Release Control",
+  "version": "0.6.1",
+  "description": "Release board for the orca-release skills: every project lit by its release state, opened from any project, with one button to pull, fetch, push, open a PR, deploy or start dev in the right workspace — terminals where no judgement is needed, agents where it is.",
+  "author": {
+    "name": "orca-release"
+  },
+  "license": "MIT",
+  "engines": {
+    "orca": ">=1.4.248"
+  },
+  "execution": "trusted-worker",
+  "pluginApi": 1,
+  "main": "src/worker.ts",
+  "contributes": {
+    "customEditors": [
+      {
+        "id": "board",
+        "title": "Release Control",
+        "filenames": [
+          "board.releasecontrol"
+        ],
+        "extensions": [
+          ".releasecontrol"
+        ],
+        "entry": "src/board.ts",
+        "frame": "isolated"
+      }
+    ],
+    "panels": [
+      {
+        "id": "release-control",
+        "title": "Release Control",
+        "icon": "rocket",
+        "entry": "src/panel.tsx",
+        "ui": "components"
+      }
+    ],
+    "commands": [
+      {
+        "id": "open",
+        "title": "Release Control: Open Board"
+      },
+      {
+        "id": "fetch",
+        "title": "Release Control: Fetch All Projects"
+      },
+      {
+        "id": "refresh",
+        "title": "Release Control: Refresh Data"
+      }
+    ],
+    "statusBarItems": [
+      {
+        "id": "attention",
+        "text": "Release Control",
+        "icon": "rocket",
+        "tooltip": "Open the Release Control board",
+        "command": "open"
+      }
+    ],
+    "events": [
+      {
+        "on": "workspace.created"
+      },
+      {
+        "on": "workspace.removed"
+      },
+      {
+        "on": "agent.status.changed"
+      },
+      {
+        "on": "workspace.changed"
+      }
+    ],
+    "settings": [
+      {
+        "key": "agent",
+        "title": "Agent to launch",
+        "description": "The agent that starts when you press a button such as Push or Deploy.",
+        "type": "string",
+        "default": "claude",
+        "enum": [
+          "claude",
+          "codex",
+          "gemini",
+          "grok",
+          "opencode"
+        ],
+        "enumLabels": [
+          "Claude",
+          "Codex",
+          "Gemini",
+          "Grok",
+          "OpenCode"
+        ]
+      },
+      {
+        "key": "refreshMinutes",
+        "title": "Refresh every (minutes)",
+        "description": "How often to re-read the project state. It also refreshes when an agent finishes or a worktree is created.",
+        "type": "integer",
+        "default": 5,
+        "minimum": 1,
+        "maximum": 60
+      },
+      {
+        "key": "fetchMinutes",
+        "title": "Fetch every (minutes)",
+        "description": "Runs git fetch in every project in the background so “to pull” stays current. 0 turns it off.",
+        "type": "integer",
+        "default": 30,
+        "minimum": 0,
+        "maximum": 240
+      },
+      {
+        "key": "notifyAgents",
+        "title": "Notify when an agent needs me",
+        "description": "A desktop notification when an agent in one of the projects stops to wait for an answer.",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "notifyReleases",
+        "title": "Notify when a push or deploy lands",
+        "description": "A desktop notification when a push or deploy started from the board shows up in the data.",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "giteaAuth",
+        "title": "Gitea: use git credentials",
+        "description": "Read open PRs and CI from Gitea servers with the credentials git already stores for them (never prompts). Off: Gitea PRs are not shown.",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "key": "envCheck",
+        "title": "Check environments",
+        "description": "On each refresh, call the url of every deploy target that has one (`- url:` in the recipe) to show up/down, the deployed version and how far behind it is.",
+        "type": "boolean",
+        "default": true
+      }
+    ]
+  },
+  "capabilities": [
+    {
+      "kind": "workspace:read"
+    },
+    {
+      "kind": "workspace:write"
+    },
+    {
+      "kind": "agent:read"
+    },
+    {
+      "kind": "agent:launch"
+    },
+    {
+      "kind": "terminal:send"
+    },
+    {
+      "kind": "terminal:read"
+    },
+    {
+      "kind": "notifications:show"
+    },
+    {
+      "kind": "storage:own"
+    },
+    {
+      "kind": "settings:own"
+    }
+  ]
+}
