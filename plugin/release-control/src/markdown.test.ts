@@ -24,6 +24,7 @@ test('markdown renders headings with an outline, lists, code, tables and links',
   assert.ok(r.html.includes('<span class="md-lang">bash</span><code>npm i &lt;x&gt;</code>'))
   assert.ok(r.html.includes('<th>a</th>') && r.html.includes('<td>2</td>'))
   assert.ok(r.html.includes('<a href="https://example.com" target="_blank" rel="noopener noreferrer">docs</a>'))
-  assert.ok(r.html.includes('<a href="https://x.dev." ') || r.html.includes('href="https://x.dev'))
+  assert.ok(r.html.includes('<a href="https://x.dev" target="_blank" rel="noopener noreferrer">https://x.dev</a>.'))
+  assert.ok(renderMarkdown('on http://localhost:3000, then').html.includes('>http://localhost:3000</a>, then'))
   assert.equal(slug('Perché è così?'), 'h-perche-e-cosi')
 })

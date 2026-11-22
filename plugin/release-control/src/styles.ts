@@ -105,7 +105,7 @@ button,select,textarea{font:inherit;color:inherit}
 .row .dot{width:8px;height:8px;border-radius:50%;background:var(--c)}
 .row .what{min-width:0}
 .row .what b{font-weight:600}
-.row .what span{display:block;color:var(--orca-muted-foreground);overflow-wrap:anywhere}
+.row .what>span{display:block;color:var(--orca-muted-foreground);overflow-wrap:anywhere}
 .row.link{cursor:pointer;border-radius:6px;transition:background-color 120ms ease}
 @media (hover:hover) and (pointer:fine){.row.link:hover{background:var(--orca-accent)}}
 .statedots{display:flex;gap:3px}

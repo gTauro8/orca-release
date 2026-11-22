@@ -6,6 +6,29 @@ Grok…) follow it step by step, never skip one silently, and ask before anythin
 **Release Control**, an Orca plugin, shows every project on one board and does the mechanical parts itself, without an
 agent: fetch, pull, start services and dev, run scripts, read docs and APIs, clean up merged branches.
 
+![Release Control: every project as a star, ringed by what is waiting; "Now" lists what needs you first](docs/screenshots/overview.png)
+
+<table>
+<tr>
+<td><img src="docs/screenshots/project.png" alt="A project page: what is waiting, the skills, what is running"></td>
+<td><img src="docs/screenshots/api.png" alt="The API tab: endpoints found in the code, by controller and method"></td>
+</tr>
+<tr>
+<td align="center">A project: what is waiting, its skills, what runs</td>
+<td align="center">API: endpoints read from the code</td>
+</tr>
+<tr>
+<td><img src="docs/screenshots/docs.png" alt="The docs reader with an outline"></td>
+<td><img src="docs/screenshots/domain.png" alt="A domain: the projects that belong together and what they have pending"></td>
+</tr>
+<tr>
+<td align="center">Docs, read right in the board</td>
+<td align="center">A domain: projects that belong together</td>
+</tr>
+</table>
+
+<sub>Screenshots use a fictional workspace (<code>tools/screenshots/</code>).</sub>
+
 | Skill | Say | What it does |
 |---|---|---|
 | `/push` | "push this branch" | branch check → the project's pre-push checks → confirmed `git push` |

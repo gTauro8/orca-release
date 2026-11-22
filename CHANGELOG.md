@@ -17,6 +17,10 @@ meaning.
   longer overwrite the current one; an older snapshot never replaces a newer one; a project opened from the board file
   no longer reopens after you close it; focus, caret and collapsed API groups survive refreshes; the new-task text is
   kept per project; a rollback no longer orbits its star for 20 minutes; the orbit alone redraws at ~15 fps.
+- **Board, found while taking the screenshots:** badges and branch names in a row no longer stretch to a full line;
+  a board file that changes only the tab or the domain now shows it; a bare link no longer swallows the comma after
+  it.
+- **Screenshots** in the README, taken from the real board with a fictional workspace (`tools/screenshots/`).
 - **Sidebar panel:** each button tracks its own press (a second press no longer re-enables the first); refresh failures
   are shown; success notes fade.
 - **Engine:** `cleanup` never offers a worktree created for a task that has no commit of its own yet, nor one holding

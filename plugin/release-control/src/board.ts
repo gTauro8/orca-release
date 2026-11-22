@@ -1386,6 +1386,8 @@ orca.document?.onDidChange?.((doc: { content?: { kind: string; text?: string } }
     wantedDoc = null
   }
   layoutWide()
+  // the file may change only the tab or the domain (select() skips a project already open): show what it asks for
+  if (state.snap) renderDrawer(false)
 })
 setInterval(renderAgo, 30_000)
 

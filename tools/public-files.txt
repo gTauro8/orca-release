@@ -16,3 +16,4 @@
 ^LICENSE$
 ^docs/guide\.html$
 ^\.gitignore$
+^docs/screenshots/

@@ -11,3 +11,4 @@ __pycache__/
 /.impeccable/live/
 /.impeccable/questions/
 .private-words
+.playwright-mcp/
